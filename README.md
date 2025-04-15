@@ -12,8 +12,16 @@ Brasília, março de 2025
 
 ## Sobre este repositório
 
-Este repositório reúne os projetos desenvolvidos ao longo do curso de Sistemas Embarcados, durante a etapa de residência.  
+Este repositório reúne os projetos desenvolvidos ao longo do curso de Sistemas Embarcados, durante a etapa de residência.
 
 Cada projeto tem sua própria pasta, contendo o código-fonte, documentação e recursos visuais.
 
 ---
+
+## Projetos
+
+- [Contador decrescente com registro de eventos por interrupção](./projetos/count_oled_btn_int) | Teste de interrupção em pinos GPIOs, junto com o display OLED.
+
+## Licença
+
+MIT License ou GPL-3.0
