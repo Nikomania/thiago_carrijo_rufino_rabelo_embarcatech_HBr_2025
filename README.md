@@ -22,6 +22,7 @@ Cada projeto tem sua própria pasta, contendo o código-fonte, documentação e 
 
 - [Contador decrescente com registro de eventos por interrupção](./projetos/count_oled_btn_int) | Teste de interrupção em pinos GPIOs, junto com o display OLED.
 - [Leitura dos sinais analógicos do joystick](./projetos/joystick_test) | Demonstração do sinal analógico no display OLED
+- [Monitor da temperatura interna da MCU](./projetos/temp_oled/) | Mostrar a temperatura em graus Cº/Fº no OLED
 
 ## Licença
 
