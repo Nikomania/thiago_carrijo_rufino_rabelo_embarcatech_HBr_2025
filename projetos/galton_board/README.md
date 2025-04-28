@@ -40,7 +40,7 @@ Este projeto implementa uma simulação de uma Galton Board (ou Quincunce) usand
 ## Testes Realizados
 
 - **Configuração padrão**: todos os pinos presentes — obtida curva aproximadamente normal.
-- **Remoção de pinos**: imagens em `assets/tests/` mostram simulações com pinos faltando em determinadas linhas, evidenciando distorções na distribuição. Caso deseje retirar pinos, basta alterar o vetor `pins_removed` em `map.c`.
+- **Remoção de pinos**: imagens em `assets/tests/` mostram simulações com pinos faltando em determinadas linhas, evidenciando uma concentração em um ponto mais à esquerda (onde havia mais pinos faltantes). Caso deseje retirar pinos, basta alterar o vetor `pins_removed` em `map.c`.
 
 ## Estrutura de arquivos
 
