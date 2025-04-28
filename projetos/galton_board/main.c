@@ -194,6 +194,6 @@ void update_countdown() {
         #ifdef SHOW_PERCENTAGE
         draw_line_OLed(x, ssd1306_height - 1, x, floor((100 - ball_histogram[i] * 100 / balls_count) * (ssd1306_height - 1) / 100), true);
         #endif
-        draw_line_OLed(x, ssd1306_height - 1, x, ssd1306_height - 1 - (ball_histogram[i]), true);
+        draw_line_OLed(x, ssd1306_height - 1, x, ssd1306_height - 1 - (ball_histogram[i] < ssd1306_height ? ball_histogram[i] : ssd1306_height - 1), true);
     }
 }
