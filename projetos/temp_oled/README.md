@@ -1,57 +1,98 @@
-# Monitor da temperatura interna da MCU
+# Monitor de Temperatura Interna da MCU
 
-Este projeto foi desenvolvido para a Raspberry Pi Pico W instalada na BitDogLab e tem como objetivo ler a temperatura ambiente através de um sensor de temperatura e exibi-la em tempo real em um display OLED. O código-fonte está presente em `main.c` e demonstra a integração entre leitura analógica e comunicação I2C.
-
-## Objetivo
-
-- Realizar a leitura da temperatura ambiente por meio de um sensor específico.
-- Exibir, em tempo real, a temperatura medida no display OLED.
-- Demonstrar a utilização dos recursos de entrada analógica (ADC) e exibição gráfica via I2C na Raspberry Pi Pico W.
-
-## Lista de Materiais e Conexões
-
-| Componente                | Conexão na BitDogLab (RP2040 Pico W) |
-| ------------------------- | ------------------------------------ |
-| BitDogLab (RP2040 Pico W) | -                                    |
-| Sensor de Temperatura     | Canal 4 de ADC                       |
-| Display OLED I2C          | SDA: GPIO14 / SCL: GPIO15            |
-
-### Execução
-
-1. Abra o projeto no VS Code, usando o ambiente com suporte ao SDK do Raspberry Pi Pico (CMake + compilador ARM);
-2. Compile o projeto normalmente (Ctrl+Shift+B no VS Code ou via terminal com cmake e make);
-3. Conecte sua BitDogLab via cabo USB e coloque a Pico no modo de boot (pressione o botão BOOTSEL e conecte o cabo);
-4. Copie o arquivo .uf2 gerado para a unidade de armazenamento que aparece (RPI-RP2);
-5. A Pico reiniciará automaticamente e começará a executar o código;
-6. O display OLED irá mostrar os valores de temperatura do sensor em celsius ou fahrenheit.
-
-## Lógica do Projeto
-
-- **Inicialização:**  
-  O código configura os módulos de ADC para a leitura do sensor de temperatura e o I2C para a comunicação com o display OLED.
-
-- **Leitura e Processamento:**  
-  O sensor de temperatura é lido através do conversor analógico-digital (ADC).  
-  A leitura é convertida para uma escala de temperatura em graus (°C ou °F, conforme a calibração), que pode ser exibida de forma legível no display.
-
-- **Exibição:**  
-  Os valores de temperatura são atualizados continuamente no display OLED, permitindo monitoramento em tempo real.
-
-## Arquivos
-
-- `main.c` – Código-fonte principal que contém toda a lógica para leitura do sensor, processamento dos dados e exibição no display OLED.
-- `assets/init_state.jpg` - Foto demonstrando o funcionamento do programa
+Este projeto implementa um monitor de temperatura usando a **Raspberry Pi Pico W** na **BitDogLab**, lendo o valor do sensor de temperatura interno via ADC e exibindo em tempo real no display OLED SSD1306 por I²C.
 
 ---
 
-## 🖼️ Imagens do Projeto
+## 🎯 Objetivos
 
-### Caso base no OLED
+- **Leitura Analógica**  
+  Capturar o valor do sensor de temperatura interno da MCU usando o conversor ADC da Pico W.
+- **Conversão de Unidades**  
+  Converter a leitura ADC em graus Celsius e Fahrenheit.
+- **Exibição Gráfica**  
+  Mostrar, em tempo real, os valores de temperatura no display OLED 128×64 via I²C.
+- **Testes Unitários**  
+  Validar a função de conversão ADC → Celsius usando Unity.
 
-![init_state](./assets/init_state.jpg)
+---
+
+## 📋 Materiais e Conexões
+
+| Componente                    | Conexão na BitDogLab (RP2040 Pico W) |
+| :---------------------------- | :----------------------------------: |
+| Raspberry Pi Pico W           |                  —                   |
+| Sensor de Temperatura Interno |            ADC Channel 4             |
+| Display OLED SSD1306 (I²C)    |    SDA → GPIO 14<br>SCL → GPIO 15    |
+
+---
+
+## ⚙️ Instruções de Build & Deploy
+
+1. **Abra no VS Code**  
+   Utilize extensão/CMake para Pico SDK (CMake + toolchain ARM).
+2. **Compile**
+   - Atalho VS Code: `Ctrl+Shift+B`
+   - Ou no terminal:
+     ```bash
+     mkdir build && cd build
+     cmake ..
+     make
+     ```
+3. **Carregue na Pico**
+   - Pressione e segure **BOOTSEL**, conecte via USB.
+   - Copie o `.uf2` gerado para a unidade `RPI-RP2`.
+   - A Pico reiniciará e iniciará o monitor.
+4. **Visualize**  
+   O display OLED mostrará alternadamente:
+   - **TEMP CELSIUS**
+   - **TEMP FAHRENHEIT**
+
+---
+
+## 🔍 Lógica do Projeto
+
+1. **Inicialização**
+   - `init_Oled()`: configura I²C e inicializa SSD1306.
+   - `adc_init()`, `adc_set_temp_sensor_enabled(true)`, `adc_select_input(4)`.
+2. **Loop Principal**
+   - `adc_read()` → valor bruto ADC.
+   - `adc_to_celsius(adc_val)`: aplica fórmula de conversão (datasheet RP2040).
+   - `celsius_to_fahrenheit(°C)`.
+   - Formata strings (`snprintf`) e centraliza no buffer de 16 caracteres.
+   - `print_lines_Oled(...)` + `render_on_display()`.
+   - `sleep_ms(1000)` para atualização a cada 1 s.
+3. **Testes**
+   - Em `test/test_adc.c`, Unity verifica conversão ADC→°C com tolerância de 0.1 °C.
+
+---
+
+## 📂 Estrutura de Arquivos
+
+```
+├── inc/
+│   ├── oled.h           # Protótipos e configurações OLED
+│   └── temperature.h    # Protótipos de conversão ADC ↔ temperatura
+├── src/
+│   ├── main.c           # Loop principal e lógica de exibição
+│   ├── oled.c           # Implementação I²C e renderização SSD1306
+│   └── temperature.c    # Funções de conversão de temperatura
+├── test/
+│   └── test_adc.c       # Testes unitários Unity para conversão ADC→°C
+├── assets/
+│   └── init_state.jpg   # Foto do display exibindo temperatura
+└── README.md            # Este arquivo
+```
+
+---
+
+## 🖼️ Demonstração
+
+![Estado Inicial no OLED](./assets/init_state.jpg)
 
 ---
 
 ## 📜 Licença
 
-MIT License - MIT GPL-3.0.
+Este projeto é distribuído sob a **MIT License**.  
+Sinta-se livre para usar, modificar e distribuir, desde que mantenha os créditos originados.
