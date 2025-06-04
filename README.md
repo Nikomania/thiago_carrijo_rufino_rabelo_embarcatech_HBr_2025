@@ -26,6 +26,7 @@ Cada projeto tem sua própria pasta, contendo o código-fonte, documentação e 
 - [Simulação de Galton Board](./projetos/galton_board/) | Simulação de Galton Board em OLED, com histograma e teste de pinos removidos.
 - [Teste de aleatoriedade rand_0_1](./projetos/rand_test/) | Teste de uniformidade da função randômica com contadores de zeros e uns no OLED.
 - [Modularização para blink](./projetos/blink_led/) | Modularização de drivers e hal para piscar o LED (cyw43_arch)
+- [Segurança em IoT com BitDogLab (C/C++)](./projetos/mqtt/) | Autenticação, criptografia e proteção contra ataques em comunicação MQTT com a BitDogLab.
 
 ## Licença
 
