@@ -9,6 +9,25 @@ struct render_area frame_area = {
     end_page : ssd1306_n_pages - 1
 };
 
+void center_c_str(char* str, int length) {
+    const int white_spaces = ((1 + MAX_CHAR - length) >> 1);
+    if (white_spaces <= 0) {
+        return;
+    }
+    for (int i = length - 1; i >= 0; i--) {
+        str[i + white_spaces] = str[i];
+        str[i] = ' ';
+    }
+}
+
+void get_c_string_from_int(int n, char* str) {
+    const int length = count_digits_10(n);
+    for (int i = length - 1; i >= 0; i--) {
+        str[i] = (n % 10) + '0';
+        n /= 10;
+    }
+}
+
 void print_lines_OLed(char** text, unsigned int n_lines, int x0, int y0) {
     if (n_lines > MAX_LINES || y0 + n_lines * 8 > ssd1306_height) {
         printf("OLed lines exceeded (%d)\n", MAX_LINES);

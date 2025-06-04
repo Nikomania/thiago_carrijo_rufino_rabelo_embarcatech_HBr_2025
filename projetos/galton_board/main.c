@@ -85,25 +85,6 @@ int rand_0_1() {
     return (int)(get_rand_32() & 1);
 }
 
-void center_c_str(char* str, int length) {
-    const int white_spaces = ((1 + MAX_CHAR - length) >> 1);
-    if (white_spaces <= 0) {
-        return;
-    }
-    for (int i = length - 1; i >= 0; i--) {
-        str[i + white_spaces] = str[i];
-        str[i] = ' ';
-    }
-}
-
-void get_c_string_from_int(int n, char* str) {
-    const int length = count_digits_10(n);
-    for (int i = length - 1; i >= 0; i--) {
-        str[i] = (n % 10) + '0';
-        n /= 10;
-    }
-}
-
 int count_digits_10(int n) {
     if (n == 0) {
         return 1;
