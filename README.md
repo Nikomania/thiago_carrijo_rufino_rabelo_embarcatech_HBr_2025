@@ -27,6 +27,7 @@ Cada projeto tem sua própria pasta, contendo o código-fonte, documentação e 
 - [Teste de aleatoriedade rand_0_1](./projetos/rand_test/) | Teste de uniformidade da função randômica com contadores de zeros e uns no OLED.
 - [Modularização para blink](./projetos/blink_led/) | Modularização de drivers e hal para piscar o LED (cyw43_arch)
 - [Segurança em IoT com BitDogLab (C/C++)](./projetos/mqtt/) | Autenticação, criptografia e proteção contra ataques em comunicação MQTT com a BitDogLab.
+- [Gravador e reprodutor de áudio](./projetos/sintetizador_audio/) | Gravação e reprodução de áudio, junto com exibição da forma de onda no display OLED.
 
 ## Licença
 
