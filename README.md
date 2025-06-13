@@ -28,6 +28,7 @@ Cada projeto tem sua própria pasta, contendo o código-fonte, documentação e 
 - [Modularização para blink](./projetos/blink_led/) | Modularização de drivers e hal para piscar o LED (cyw43_arch)
 - [Segurança em IoT com BitDogLab (C/C++)](./projetos/mqtt/) | Autenticação, criptografia e proteção contra ataques em comunicação MQTT com a BitDogLab.
 - [Gravador e reprodutor de áudio](./projetos/sintetizador_audio/) | Gravação e reprodução de áudio, junto com exibição da forma de onda no display OLED.
+- [Atividade roteirizada com FreeRTOS na BitDogLab](./projetos/FreeRTOS_led_button_buzzer/) | Gerenciamento de múltiplas tarefas em tempo real com FreeRTOS, incluindo alternância de LED RGB, leitura de botões com debounce e sinalização sonora via buzzer.
 
 ## Licença
 
