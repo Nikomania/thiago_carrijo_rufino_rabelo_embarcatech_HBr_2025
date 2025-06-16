@@ -24,11 +24,7 @@ struct btn_state {
 };
 
 // Protótipos
-void init_button(uint pin);
+void init_button(struct btn_state* btn);
 void vTaskButton(void *pvParameters);
-
-// Handles externos
-extern TaskHandle_t xLEDTaskHandle;
-extern TaskHandle_t xBuzzerTaskHandle;
 
 #endif

@@ -2,22 +2,12 @@
 #include "led_rgb.h"
 #include "buzzer.h"
 
-TaskHandle_t xLEDTaskHandle = NULL;
-TaskHandle_t xBuzzerTaskHandle = NULL;
-
-struct btn_state btn_a = {BTN_A, BTN_RELEASED, 0, &xLEDTaskHandle};
-struct btn_state btn_b = {BTN_B, BTN_RELEASED, 0, &xBuzzerTaskHandle};
-
-void init_button(uint pin) {
-    gpio_init(pin);
-    gpio_set_dir(pin, GPIO_IN);
-    gpio_pull_up(pin);
-    
-    if (pin == BTN_A) {
-        xTaskCreate(vTaskButton, "Button A Task", configMINIMAL_STACK_SIZE, &btn_a, 3, NULL);
-    } else if (pin == BTN_B) {
-        xTaskCreate(vTaskButton, "Button B Task", configMINIMAL_STACK_SIZE, &btn_b, 3, NULL);
-    }
+void init_button(struct btn_state* btn) {
+    gpio_init(btn->pin);
+    gpio_set_dir(btn->pin, GPIO_IN);
+    gpio_pull_up(btn->pin);
+    const char* task_name = (btn->pin == BTN_A) ? "Button A Task" : "Button B Task";
+    xTaskCreate(vTaskButton, task_name, configMINIMAL_STACK_SIZE, btn, 1, NULL);
 }
 
 void vTaskButton(void *pvParameters) {
@@ -44,6 +34,6 @@ void vTaskButton(void *pvParameters) {
                 }
             }
         }
-        vTaskDelay(pdMS_TO_TICKS(100)); // Polling a cada 100ms
+        vTaskDelay(pdMS_TO_TICKS(BTN_DEBOUNCE)); // Polling a cada 100ms
     }
 }
