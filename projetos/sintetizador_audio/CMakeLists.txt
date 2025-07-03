@@ -80,7 +80,6 @@ target_include_directories(microphone_dma PRIVATE
 # Add any user requested libraries
 target_link_libraries(microphone_dma 
         hardware_dma
-        hardware_timer
         hardware_adc
         hardware_clocks
         hardware_i2c
