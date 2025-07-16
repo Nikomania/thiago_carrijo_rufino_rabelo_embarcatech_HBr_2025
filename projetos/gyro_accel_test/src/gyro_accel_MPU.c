@@ -7,12 +7,13 @@
 #include <stdio.h>
 #include <string.h>
 #include "pico/stdlib.h"
+#include "gpio.h"
 #include "MPU6050.h"
 
 
 int main() {
     stdio_init_all();
-    sleep_ms(3000); // Wait for the serial port to be ready
+    sleep_ms(5000); // Wait for the serial port to be ready
 #if !defined(i2c_default) || !defined(I2C_SDA_PIN) || !defined(I2C_SCL_PIN)
     #warning i2c/mpu6050_i2c example requires a board with I2C pins
     puts("Default I2C pins were not defined");
@@ -29,32 +30,35 @@ int main() {
     // Make the I2C pins available to picotool
     bi_decl(bi_2pins_with_func(I2C_SDA_PIN, I2C_SCL_PIN, GPIO_FUNC_I2C));
 
-    mpu6050_reset();
+    gpio_setup();
+
+    if (!mpu6050_init()) {
+        while (true) {
+            printf("MPU6050 initialization failed. Please check your connections.\n");
+            sleep_ms(1000); // Wait before retrying
+        }
+    } else {
+        printf("MPU6050 initialized successfully.\n");
+    }
     
-    int16_t accel_buf[3], gyro_buf[3], accel_offset[3], gyro_offset[3], temp;
-    float accel_g[3], gyro_dps[3];
+    int16_t accel_buf[3], gyro_buf[3], accel_offset[3] = {0}, gyro_offset[3] = {0}, accel_scale[3], temp_buf;
+    float accel_g[3], gyro_dps[3], temp;
 
-    printf("MPU6050 will calibrate offsets for 2 seconds in 3 seconds...\n");
+    // mpu6050_calibrate(accel_offset, gyro_offset, accel_scale);
 
-    printf("Please keep the device still during calibration.\n");
-    sleep_ms(3000);
+    printf("Starting to read raw data from MPU6050...\n");
 
-    mpu6050_calibrate(accel_offset, gyro_offset);
-
-    printf("Calibration complete.\n");
-    
     while (1) {
-        mpu6050_read_raw(accel_buf, gyro_buf, accel_offset, gyro_offset, &temp);
-        mpu6050_byte_to_acceleration(accel_buf, accel_g);
-        mpu6050_byte_to_gyro(gyro_buf, gyro_dps);
+        mpu6050_read_raw(accel_buf, gyro_buf, accel_offset, gyro_offset, &temp_buf);
+        mpu6050_byte_to_m_per_s_squared(accel_buf, accel_g);
+        mpu6050_byte_to_dps(gyro_buf, gyro_dps);
+        mpu6050_byte_to_celsius(temp_buf, &temp);
 
         // These are the raw numbers from the chip, so will need tweaking to be really useful.
         // See the datasheet for more information
         printf("Acc. X = %.2f, Y = %.2f, Z = %.2f\n", accel_g[0], accel_g[1], accel_g[2]);
         printf("Gyro. X = %.2f, Y = %.2f, Z = %.2f\n", gyro_dps[0], gyro_dps[1], gyro_dps[2]);
-        // Temperature is simple so use the datasheet calculation to get deg C.
-        // Note this is chip temperature.
-        printf("Temp. = %f\n", (temp / 340.0) + 36.53);
+        printf("Temp. = %.2f\n", temp);
 
         sleep_ms(100);
     }

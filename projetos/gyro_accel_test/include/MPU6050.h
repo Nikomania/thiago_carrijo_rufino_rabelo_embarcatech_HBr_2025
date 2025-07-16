@@ -28,16 +28,29 @@
 #include "hardware/i2c.h"
 
 
-extern int addr;
 #define I2C_SDA_PIN 0
 #define I2C_SCL_PIN 1
 
+#define MPU6050_ADDR        0x68
+#define WHO_AM_I_REG        0x75
+#define PWR_MGMT_1_REG      0x6B
+#define SMPLRT_DIV_REG      0x19
+#define CONFIG_REG          0x1A
+#define GYRO_CONFIG_REG     0x1B
+#define ACCEL_CONFIG_REG    0x1C
+#define ACCEL_XOUT_H        0x3B
+
+#define GRAVITY 9.80665f // m/s²
+#define COEF_LSB2MS2 (2 * GRAVITY / (1 << 15)) // ±2g → 16384 LSB/g
+
+
 #ifdef i2c_default
-void mpu6050_reset();
+bool mpu6050_init();
 void mpu6050_read_raw(int16_t accel[3], int16_t gyro[3], int16_t accel_offset[3], int16_t gyro_offset[3], int16_t *temp);
-void mpu6050_byte_to_acceleration(int16_t accel[3], float accel_g[3]);
-void mpu6050_byte_to_gyro(int16_t gyro[3], float gyro_dps[3]);
-void mpu6050_calibrate(int16_t accel_offset[3], int16_t gyro_offset[3]);
+void mpu6050_byte_to_m_per_s_squared(int16_t accel[3], float accel_g[3]);
+void mpu6050_byte_to_dps(int16_t gyro[3], float gyro_dps[3]);
+void mpu6050_byte_to_celsius(int16_t temp_buf, float* temp);
+// void mpu6050_calibrate(int16_t accel_offset[3], int16_t gyro_offset[3], int16_t accel_scale[3]);
 #endif
 
 #endif
