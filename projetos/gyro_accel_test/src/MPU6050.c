@@ -1,5 +1,4 @@
 #include "MPU6050.h"
-#include "gpio.h"
 
 
 #ifdef i2c_default
@@ -98,60 +97,4 @@ void mpu6050_byte_to_celsius(int16_t temp_raw, float *t_celsius) {
     *t_celsius = (temp_raw / 340.0f) + 36.53f;
 }
 
-// void mpu6050_calibrate(int16_t accel_offset[3], int16_t gyro_offset[3], int16_t accel_scale[3]) {
-//     const char* prompts[6] = {
-//         ">> Posicione +Z para cima e aperte A",
-//         ">> Posicione -Z para cima e aperte A",
-//         ">> Posicione +Y para cima e aperte A",
-//         ">> Posicione -Y para cima e aperte A",
-//         ">> Posicione +X para cima e aperte A",
-//         ">> Posicione -X para cima e aperte A"
-//     };
-    
-//     float R[3][2];
-
-//     printf("=== Calibracao Automatica MPU6050 ===\n");
-//     printf("Pressione A para iniciar...\n");
-
-//     // Espera primeiro aperto
-//     while (!is_button_pressed());
-//     sleep_ms(50);
-//     while (is_button_pressed());
-//     sleep_ms(50);
-
-//     int state = 0;
-
-//     while (state < 6) {
-//         printf("%s\n", prompts[state]);
-//         // aguarda apertar
-//         while (!is_button_pressed());
-//         sleep_ms(50);
-//         while (is_button_pressed());
-//         sleep_ms(50);
-
-//         // lê accel raw e converte
-//         int16_t raw[3];
-//         mpu6050_read_accel(raw);
-//         float v = raw[state/2] * COEF_LSB2MS2;
-//         R[state/2][state%2] = v;
-//         printf("Leitura eixo %d %s: %f m/s²\n", state/2,
-//                (state%2==0?"+1g":"-1g"), v);
-//         state++;
-//     }
-
-//     // calcula offset e scale
-//     for (int axe = 0; axe < 3; axe++) {
-//         accel_offset[axe] = 0.5f * (R[axe][0] + R[axe][1]);
-//         accel_scale[axe]  = 0.5f * (R[axe][0] - R[axe][1]) / GRAVITY;
-//     }
-
-//     // exibe resultados
-//     printf("\n=== Resultado da Calibracao ===\n");
-//     for (int axe = 0; axe < 3; axe++) {
-//         const char* name = axe==0?"X":axe==1?"Y":"Z";
-//         printf("Offset %s: %f m/s², Scale %s: %f\n", name, accel_offset[axe], name, accel_scale[axe]);
-//     }
-
-//     printf("Calibracao concluida.\n");
-// }
 #endif

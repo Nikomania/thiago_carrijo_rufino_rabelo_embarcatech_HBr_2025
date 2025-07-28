@@ -31,7 +31,6 @@ pico_sdk_init()
 
 add_executable(${ProjectName} 
     src/MPU6050.c
-    src/gpio.c
     src/${ProjectName}.c
 )
 

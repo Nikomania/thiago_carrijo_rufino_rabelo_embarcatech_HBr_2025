@@ -6,10 +6,19 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "pico/stdlib.h"
-#include "gpio.h"
 #include "MPU6050.h"
 
+#define DELAY 100 // ms
+#define ALPHA 0.9f
+
+float calc_angle(float accel[3], float gyro[3], float alpha, float dt) {
+    static float angle = 0.0f; // Initialize angle to zero
+    float accel_angle = atan2f(accel[2], accel[0]) * 180.0f / M_PI;
+    angle = alpha * (angle + gyro[1] * dt) + (1 - alpha) * accel_angle;
+    return angle;
+}
 
 int main() {
     stdio_init_all();
@@ -29,8 +38,6 @@ int main() {
     gpio_pull_up(I2C_SCL_PIN);
     // Make the I2C pins available to picotool
     bi_decl(bi_2pins_with_func(I2C_SDA_PIN, I2C_SCL_PIN, GPIO_FUNC_I2C));
-
-    gpio_setup();
 
     if (!mpu6050_init()) {
         while (true) {
@@ -53,14 +60,16 @@ int main() {
         mpu6050_byte_to_m_per_s_squared(accel_buf, accel_g);
         mpu6050_byte_to_dps(gyro_buf, gyro_dps);
         mpu6050_byte_to_celsius(temp_buf, &temp);
+        float angle = calc_angle(accel_g, gyro_dps, ALPHA, DELAY / 1000.0f);
 
         // These are the raw numbers from the chip, so will need tweaking to be really useful.
         // See the datasheet for more information
         printf("Acc. X = %.2f, Y = %.2f, Z = %.2f\n", accel_g[0], accel_g[1], accel_g[2]);
         printf("Gyro. X = %.2f, Y = %.2f, Z = %.2f\n", gyro_dps[0], gyro_dps[1], gyro_dps[2]);
         printf("Temp. = %.2f\n", temp);
+        printf("Angle = %.2f\n", angle);
 
-        sleep_ms(100);
+        sleep_ms(DELAY);
     }
 #endif
 }
